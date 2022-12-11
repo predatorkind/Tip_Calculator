@@ -22,7 +22,9 @@ import androidx.compose.ui.unit.sp
 import net.vertexgraphics.tipcalculator.ui.theme.TipCalculatorTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import java.text.NumberFormat
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +45,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TipCalculatorScreen() {
+    //var amountInput: MutableState<String> = mutableStateOf("0")
+    var amountInput by remember { mutableStateOf("")}
+    val amount = amountInput.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount)
+
     Column(modifier = Modifier.padding(32.dp),
     verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
@@ -51,16 +58,21 @@ fun TipCalculatorScreen() {
             modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         Spacer(modifier = Modifier.height(16.dp))
-        EditNumberField()
+        EditNumberField(value = amountInput, onValueChange = {amountInput = it})
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(text= stringResource(id = R.string.tip_amount, tip),
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
 @Composable
-fun EditNumberField(){
-    //var amountInput: MutableState<String> = mutableStateOf("0")
-    var amountInput by remember { mutableStateOf("")}
-    TextField(value = amountInput,
-        onValueChange = {amountInput = it},
+fun EditNumberField(value: String, onValueChange: (String) -> Unit){
+
+    TextField(value = value,
+        onValueChange = onValueChange,
         label = {Text(stringResource(id = R.string.cost_of_service))},
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
@@ -75,4 +87,17 @@ fun DefaultPreview() {
     TipCalculatorTheme {
         TipCalculatorScreen()
     }
+}
+
+
+/**
+ * Calculates the tip amount based on service cost and formats the result as currency
+ *
+ * @param amount: the base cost of a service
+ * @param tipPercent: percentage of the base cost to calculate as tip
+ * @return: tip amount formatted as currency
+ */
+private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String{
+    val tip = tipPercent / 100 * amount
+    return NumberFormat.getCurrencyInstance().format(tip)
 }
