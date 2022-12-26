@@ -70,24 +70,35 @@ fun TipCalculatorScreen() {
 
 
 
-
+    // all UI elements stored inside a Column
     Column(modifier = Modifier.padding(32.dp),
     verticalArrangement = Arrangement.spacedBy(8.dp)) {
+
+        // app title
         Text(
             text = stringResource(id = R.string.calculate_tip),
             fontSize = 24.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         Spacer(modifier = Modifier.height(16.dp))
+
+        // input fields
         EditNumberField(label = R.string.bill_amount,
             keyboardOptions= KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Next), keyboardActions= KeyboardActions(onNext={focusManager.moveFocus(
+            imeAction = ImeAction.Next), keyboardActions=
+            KeyboardActions(onNext={focusManager.moveFocus(
                 FocusDirection.Down)}), value = amountInput, onValueChange = {amountInput = it})
         EditNumberField(label = R.string.how_was_the_service,
             keyboardOptions= KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done), keyboardActions= KeyboardActions(onDone={ focusManager.clearFocus()}), value = tipInput, onValueChange = {tipInput = it})
+            imeAction = ImeAction.Done), keyboardActions=
+            KeyboardActions(onDone={ focusManager.clearFocus()}),
+            value = tipInput, onValueChange = {tipInput = it})
+
+        // tip round up switch
         RoundTheTipRow(roundUp = roundUp, onRoundUpChanged = { roundUp = it})
         Spacer(modifier = Modifier.height(24.dp))
+
+        // result output text box
         Text(text= stringResource(id = R.string.tip_amount, tip),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             fontSize = 20.sp,
@@ -96,6 +107,14 @@ fun TipCalculatorScreen() {
     }
 }
 
+
+/**
+ * A labeled switch UI element used to
+ *
+ * @param roundUp: the state of the switch
+ * @param onRoundUpChanged: callback function
+ * @param modifier: switch visuals
+ */
 @Composable
 fun RoundTheTipRow(roundUp: Boolean, onRoundUpChanged: (Boolean) -> Unit, modifier: Modifier = Modifier){
     Row(modifier= Modifier
@@ -111,7 +130,15 @@ fun RoundTheTipRow(roundUp: Boolean, onRoundUpChanged: (Boolean) -> Unit, modifi
 }
 
 
-
+/**
+ * Generic text input field used in the UI
+ *
+ * @param label: the resource ID of  the string used as a label
+ * @param keyboardOptions: specific keyboard options for a given use case
+ * @param keyboardActions: specific keyboard actions for a given use case
+ * @param value: current value stored inside the text field
+ * @param onValueChange: callback function
+ */
 @Composable
 fun EditNumberField(@StringRes label: Int, keyboardOptions: KeyboardOptions,
                     keyboardActions: KeyboardActions,
