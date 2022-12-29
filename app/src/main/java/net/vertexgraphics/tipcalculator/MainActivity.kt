@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
 /**
  * Main screen of the app. Contains text fields for bill and tip amounts, switch enabling rounding
  * the tip and output text providing the user with calculated tip total.
- *
+ *  This is just a test... This is just a test... This is just a test... This is just a test...
  */
 @Composable
 fun TipCalculatorScreen() {
